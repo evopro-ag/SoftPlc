@@ -25,13 +25,26 @@ namespace SoftPlc
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        readonly string CorsPolicy = "_myAllowSpecificOrigins";
+
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
         {
 			services.AddSingleton<IPlcService, PlcService>();
 
-	        // Register the Swagger generator, defining 1 or more Swagger documents
-	        services.AddSwaggerGen(c =>
+            services.AddCors(options =>
+            {
+                options.AddPolicy(CorsPolicy,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
+			// Register the Swagger generator, defining 1 or more Swagger documents
+			services.AddSwaggerGen(c =>
 	        {
 		        c.SwaggerDoc("v1", new Info
 		        {
@@ -69,8 +82,10 @@ namespace SoftPlc
                 app.UseDeveloperExceptionPage();
             }
 
-	        // Enable middleware to serve generated Swagger as a JSON endpoint.
-	        app.UseSwagger();
+            app.UseCors(CorsPolicy);
+
+			// Enable middleware to serve generated Swagger as a JSON endpoint.
+			app.UseSwagger();
 
 	        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
 	        // specifying the Swagger JSON endpoint.
@@ -78,7 +93,6 @@ namespace SoftPlc
 	        {
 		        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SoftPlc API V1");
 	        });
-
 			app.UseMvc();
 
 			//initialize plc service on start
