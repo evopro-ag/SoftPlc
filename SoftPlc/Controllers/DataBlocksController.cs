@@ -36,7 +36,7 @@ namespace SoftPlc.Controllers
 		/// <returns></returns>
         // GET api/datablocks/5
         [HttpGet("{id}")]
-        public DatablockDescription Get(int id)
+        public DatablockDescription Get( [FromRoute] int id)
         {
 	        return plcService.GetDatablock(id);
         }
@@ -45,9 +45,9 @@ namespace SoftPlc.Controllers
 		/// </summary>
 		/// <param name="id">The datablock id</param>
 		/// <param name="size">The datablock size</param>
-        // POST api/datablocks
-        [HttpPost]
-        public void Post(int id, int size)
+		// POST api/datablocks
+		[HttpPost("{id}")]
+		public void Post([FromRoute] int id, [FromBody] int size)
         {
 	        plcService.AddDatablock(id, size);
 			plcService.SaveDatablocks();
@@ -59,7 +59,7 @@ namespace SoftPlc.Controllers
 		/// <param name="data">The datablock content in form of array of bytes</param>
 		// PUT api/datablocks/5
 		[HttpPut("{id}")]
-        public void Put(int id, [FromBody]byte[] data)
+        public void Put([FromRoute] int id, byte[] data)
         {
 	        plcService.UpdateDatablockData(id, data);
         }
