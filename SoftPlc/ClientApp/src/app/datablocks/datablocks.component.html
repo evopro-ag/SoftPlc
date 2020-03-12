@@ -1,0 +1,16 @@
+<div class="left">
+<h2>Datablocks</h2>
+<ul class="datablocks">
+        
+  <li *ngFor="let datablock of datablocks" [class.selected]="datablock === selectedDatablock" (click)="onSelect(datablock)">
+    <div class="badge">DB {{datablock.id}} </div>
+    {{datablock.size}} byte 
+    <button mat-icon-button class="delete-icon" (click)="onRemove(datablock)"><mat-icon>delete</mat-icon></button>
+  </li>
+</ul>
+<button mat-button class="btn badge" (click)="onAdd()">Add</button>
+</div>
+
+ <div class="right">
+<app-datablock-detail [datablock]="selectedDatablock"></app-datablock-detail>
+</div>

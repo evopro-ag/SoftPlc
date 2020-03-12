@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Add New Datablock</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.id" placeholder="id">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.size" placeholder="size">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div>

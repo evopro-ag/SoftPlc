@@ -1,0 +1,25 @@
+:host{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+
+.text{
+    flex-grow: 1;
+    width: 50%;
+    height: 250px;
+}
+
+.hexcell{
+    width: 20px;
+}
+
+.ng-invalid{
+    border-radius: 1px;
+
+    border-color: red;
+}
+
+.tooBigInput{
+    color: red;
+}

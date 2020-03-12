@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -72,7 +74,13 @@ namespace SoftPlc
 			});
 
 			services.AddMvc();
-        }
+
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist/soft-plc-website";
+            });
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -84,7 +92,7 @@ namespace SoftPlc
 
             app.UseCors(CorsPolicy);
 
-			// Enable middleware to serve generated Swagger as a JSON endpoint.
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
 			app.UseSwagger();
 
 	        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
@@ -95,8 +103,22 @@ namespace SoftPlc
 	        });
 			app.UseMvc();
 
-			//initialize plc service on start
-			var plcService = app.ApplicationServices.GetService<IPlcService>();
+            app.UseSpaStaticFiles();
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
+
+            //initialize plc service on start
+            var plcService = app.ApplicationServices.GetService<IPlcService>();
         }
     }
 }

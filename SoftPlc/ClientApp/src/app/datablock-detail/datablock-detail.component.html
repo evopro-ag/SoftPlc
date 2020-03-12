@@ -1,0 +1,44 @@
+<div *ngIf="datablock">
+    <div>
+    <h2>Datablock {{datablock.id}} Details: </h2>
+    <button (click)="onReload()">Reload</button>
+    <button (click)="onSave()">Save</button>
+    <div><span>block-size: </span>{{datablock.size}}</div>
+    <div ng-class="{'currentSize > databblock.size': 'tooBigInput'}"><span>input-size: </span>{{currentSize}}</div>
+    <textarea class="text" (input)="onDataChanged(decodedData)" [(ngModel)]='decodedData' name="decodedData" maxlength="{{datablock.size}}"></textarea>
+    </div>
+    <table class="table table-striped table-bordered">
+        <caption>Hex:</caption>
+        <tr>
+        <td></td>
+        <th scope="col">00</th>
+        <th scope="col">01</th>
+        <th scope="col">02</th>
+        <th scope="col">03</th>
+        <th scope="col">04</th>
+        <th scope="col">05</th>
+        <th scope="col">06</th>
+        <th scope="col">07</th>
+        <th scope="col">08</th>
+        <th scope="col">09</th>
+        <th scope="col">0A</th>
+        <th scope="col">0B</th>
+        <th scope="col">0C</th>
+        <th scope="col">0D</th>
+        <th scope="col">0E</th>
+        <th scope="col">0F</th>
+        </tr>
+        <tr *ngFor="let line of decodedBytes;let lineNumber = index;trackBy: trackByOffset;" class="hexbytes">
+        <th scope="row">{{line.offset}}</th>
+        <ng-container *ngFor="let byte of line.bytes; let byteNumber = index; trackBy: trackByOffset;">
+            <ng-container *ngIf="byte != null && byte != ''">
+            <td><input class="hexcell" 
+                [(ngModel)]='decodedBytes[lineNumber].bytes[byteNumber]' 
+                (input)="onHexChanged(decodedBytes, decodedBytes[lineNumber].bytes[byteNumber]);" 
+                maxlength="2"  pattern="{{validationpattern}}"
+                ></td>
+            </ng-container>
+        </ng-container>
+     </tr>
+        </table>
+</div>
